@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="_ds/industry-fe0e0043-aaa9-4262-942f-6a816686f2eb/styles.css">
+<script src="_ds/industry-fe0e0043-aaa9-4262-942f-6a816686f2eb/_ds_bundle.js"></script>
+<style>
+:root{
+  --color-bg:#f4f6fa; --color-surface:#ffffff; --color-text:#132741;
+  --color-divider:color-mix(in srgb,#132741 12%,transparent);
+  --color-accent:#1e5091; --color-accent-2:#22c55e;
+  --color-accent-100:#eaf1fb; --color-accent-200:#cfe0f5; --color-accent-300:#a8c5e8;
+  --color-accent-400:#6f9bd1; --color-accent-500:#2f6bb3; --color-accent-600:#1e5091;
+  --color-accent-700:#163d70; --color-accent-800:#102c52; --color-accent-900:#0b2545;
+}
+body{margin:0;background:var(--color-bg)}
+a{color:var(--color-accent)} a:hover{color:var(--color-accent-700)}
+.fi{width:100%;min-height:46px;padding:10px 13px;font:inherit;font-size:15px;color:#132741;background:#fbfcfe;border:1px solid color-mix(in srgb,#132741 16%,transparent);border-radius:8px}
+.fi:hover{border-color:#6f9bd1}
+.fi:focus{outline:none;border-color:#1e5091;box-shadow:0 0 0 3px rgba(30,80,145,.14)}
+.fi::placeholder{color:#8fa3ba}
+.fl{display:block;font-size:12.5px;font-weight:500;letter-spacing:.01em;color:#3d5470;margin-bottom:6px}
+.tap{cursor:pointer;font:inherit;font-size:14.5px;min-height:44px;padding:0 16px;border-radius:8px;display:inline-flex;align-items:center;gap:8px;border:1px solid color-mix(in srgb,#132741 14%,transparent);background:#fff;color:#3d5470;transition:background .12s,border-color .12s}
+.tap:hover{border-color:#1e5091;background:#eaf1fb}
+.tap:active{background:#cfe0f5}
+.tap[aria-pressed="true"]{border-color:#22c55e;background:#e8f8ee;color:#0d5c2e}
+.cta{cursor:pointer;font:inherit;font-family:var(--font-heading);font-size:16px;min-height:50px;padding:0 22px;border-radius:8px;border:1px solid #22c55e;background:#22c55e;color:#08301c;display:inline-flex;align-items:center;justify-content:center;gap:9px;transition:background .12s}
+.cta:hover{background:#16a34a;border-color:#16a34a}
+.cta:active{background:#128040}
+.cta:disabled{opacity:.5;cursor:not-allowed}
+.ghostbtn{cursor:pointer;font:inherit;font-size:14.5px;min-height:50px;padding:0 18px;border-radius:8px;border:1px solid color-mix(in srgb,#132741 14%,transparent);background:#fff;color:#3d5470}
+.ghostbtn:hover{background:#eef2f7}
+</style>
+</helmet>
+
+<div style="display:flex;flex-wrap:wrap;gap:20px;align-items:flex-start;font-family:var(--font-body);color:var(--color-text)">
+
+  <form onSubmit="{{ onSubmit }}" style="flex:1 1 420px;min-width:0;background:#fff;border:1px solid var(--color-divider);border-radius:10px;padding:22px 20px 18px;display:flex;flex-direction:column;gap:16px">
+
+    <div style="display:flex;align-items:flex-start;gap:12px">
+      <div style="min-width:0;flex:1">
+        <h2 style="margin:0;font-size:25px;line-height:1.1">Formulir Pengaduan</h2>
+        <div style="font-size:12.5px;color:#5b7391;margin-top:2px">Terkirim ke <span style="color:var(--color-accent-700)">{{ tujuanEmail }}</span></div>
+      </div>
+      <div style="flex:none;text-align:right">
+        <div style="font-family:var(--font-heading);font-size:19px;line-height:1">{{ pct }}%</div>
+        <div style="font-size:10.5px;letter-spacing:.08em;text-transform:uppercase;color:#8fa3ba">Lengkap</div>
+      </div>
+    </div>
+    <div style="height:5px;border-radius:3px;background:#e7edf5;overflow:hidden;margin-top:-6px">
+      <div style="{{ barStyle }}"></div>
+    </div>
+
+    <div>
+      <label class="fl" for="f-judul">Judul kerusakan <span style="color:#c0392b">*</span></label>
+      <input id="f-judul" class="fi" value="{{ f.judul }}" onChange="{{ setJudul }}" onBlur="{{ touchJudul }}" placeholder="Contoh: Keran toilet putra lantai 1 bocor">
+      <sc-if value="{{ errJudul }}" hint-placeholder-val="{{ false }}">
+        <div style="font-size:12px;color:#c0392b;margin-top:5px">{{ errJudul }}</div>
+      </sc-if>
+    </div>
+
+    <div>
+      <span class="fl">Kategori sarpras <span style="color:#c0392b">*</span></span>
+      <div style="display:flex;flex-wrap:wrap;gap:8px">
+        <sc-for list="{{ kategoriOpts }}" as="k" hint-placeholder-count="4">
+          <button type="button" class="tap" aria-pressed="{{ k.on }}" onClick="{{ k.pick }}">
+            <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="{{ k.icon }}"></path></svg>
+            {{ k.label }}
+          </button>
+        </sc-for>
+      </div>
+    </div>
+
+    <div>
+      <label class="fl" for="f-lokasi">Lokasi spesifik <span style="color:#c0392b">*</span></label>
+      <input id="f-lokasi" class="fi" value="{{ f.lokasi }}" onChange="{{ setLokasi }}" onBlur="{{ touchLokasi }}" placeholder="Gedung B, Lantai 2, Ruang XI IPA 2">
+      <sc-if value="{{ errLokasi }}" hint-placeholder-val="{{ false }}">
+        <div style="font-size:12px;color:#c0392b;margin-top:5px">{{ errLokasi }}</div>
+      </sc-if>
+    </div>
+
+    <div>
+      <label class="fl" for="f-desk">Deskripsi kendala <span style="color:#c0392b">*</span></label>
+      <textarea id="f-desk" class="fi" value="{{ f.deskripsi }}" onChange="{{ setDeskripsi }}" onBlur="{{ touchDeskripsi }}" placeholder="Jelaskan kerusakan, sejak kapan terjadi, dan dampaknya terhadap kegiatan belajar." style="min-height:104px;resize:vertical"></textarea>
+      <div style="display:flex;gap:10px;margin-top:5px">
+        <sc-if value="{{ errDeskripsi }}" hint-placeholder-val="{{ false }}">
+          <span style="font-size:12px;color:#c0392b">{{ errDeskripsi }}</span>
+        </sc-if>
+        <span style="font-size:12px;color:#8fa3ba;margin-left:auto;font-variant-numeric:tabular-nums">{{ descLen }}/400</span>
+      </div>
+    </div>
+
+    <div style="display:flex;flex-wrap:wrap;gap:14px">
+      <div style="flex:1 1 180px;min-width:0">
+        <label class="fl" for="f-nama">Nama pelapor</label>
+        <input id="f-nama" class="fi" value="{{ f.nama }}" onChange="{{ setNama }}" placeholder="Nama lengkap">
+      </div>
+      <div style="flex:1 1 140px;min-width:0">
+        <label class="fl" for="f-kelas">Kelas / unit</label>
+        <input id="f-kelas" class="fi" value="{{ f.kelas }}" onChange="{{ setKelas }}" placeholder="XI IPA 2">
+      </div>
+    </div>
+
+    <div>
+      <span class="fl">Tingkat urgensi</span>
+      <div style="display:flex;flex-wrap:wrap;gap:8px">
+        <sc-for list="{{ urgensiOpts }}" as="u" hint-placeholder-count="3">
+          <button type="button" class="tap" aria-pressed="{{ u.on }}" onClick="{{ u.pick }}">{{ u.label }}</button>
+        </sc-for>
+      </div>
+    </div>
+
+    <div>
+      <span class="fl">Foto bukti kerusakan</span>
+      <label style="display:flex;align-items:center;gap:13px;min-height:64px;padding:12px 15px;border:1.5px dashed var(--color-accent-300);border-radius:10px;background:var(--color-accent-100);cursor:pointer" style-hover="border-color:#22c55e;background:#f0fbf4">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="color:var(--color-accent-600);flex:none"><path d="M12 16V4M7 9l5-5 5 5M4 17v2a2 2 0 002 2h12a2 2 0 002-2v-2"></path></svg>
+        <span style="min-width:0">
+          <span style="display:block;font-family:var(--font-heading);font-size:15.5px;color:var(--color-accent-800)">{{ fotoLabel }}</span>
+          <span style="display:block;font-size:12px;color:#5b7391">Ketuk untuk ambil foto atau pilih dari galeri</span>
+        </span>
+        <input type="file" accept="image/*" capture="environment" multiple onChange="{{ onFiles }}" style="display:none">
+      </label>
+      <div style="display:flex;flex-wrap:wrap;gap:8px;margin-top:9px">
+        <sc-for list="{{ fotoList }}" as="p" hint-placeholder-count="0">
+          <span style="display:inline-flex;align-items:center;gap:7px;min-height:32px;padding:0 10px;border-radius:8px;background:#eef2f7;font-size:12px;color:#3d5470">
+            {{ p.nama }}
+            <button type="button" onClick="{{ p.remove }}" aria-label="Hapus foto" style="cursor:pointer;border:0;background:transparent;color:#5b7391;font-size:15px;line-height:1;padding:2px 0">&times;</button>
+          </span>
+        </sc-for>
+      </div>
+    </div>
+
+    <div style="display:flex;flex-wrap:wrap;gap:10px;align-items:center;padding-top:14px;border-top:1px solid var(--color-divider)">
+      <button type="submit" class="cta" style="flex:1 1 200px">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11l18-8-8 18-2-8z"></path></svg>
+        Kirim ke email Sarpras
+      </button>
+      <button type="button" onClick="{{ reset }}" class="ghostbtn">Kosongkan</button>
+    </div>
+    <div style="font-size:12px;color:#8fa3ba;margin-top:-6px">{{ hint }}</div>
+
+    <sc-if value="{{ sent }}" hint-placeholder-val="{{ false }}">
+      <div style="display:flex;gap:11px;background:#e8f8ee;border:1px solid #c8efd8;border-radius:10px;padding:14px 15px">
+        <span style="flex:none;width:22px;height:22px;border-radius:50%;background:#22c55e;color:#08301c;display:grid;place-items:center;font-size:13px">&#10003;</span>
+        <span style="font-size:13.5px;color:#0d5c2e;line-height:1.5">Aplikasi email terbuka dengan laporan yang sudah terisi. Lampirkan foto bukti, lalu tekan Kirim.</span>
+      </div>
+    </sc-if>
+  </form>
+
+  <sc-if value="{{ showPreview }}" hint-placeholder-val="{{ true }}">
+    <aside style="flex:1 1 270px;min-width:250px;display:flex;flex-direction:column;gap:14px">
+      <div style="background:#0b2545;color:#cfe0f5;border-radius:10px;padding:20px">
+        <div style="font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;color:#8fdcb0">Pratinjau email</div>
+        <div style="margin-top:12px;font-size:12.5px;line-height:1.65;font-family:ui-monospace,SFMono-Regular,Menlo,monospace;white-space:pre-wrap;word-break:break-word;color:#e7effa">{{ preview }}</div>
+      </div>
+      <div style="background:#fff;border:1px solid var(--color-divider);border-radius:10px;padding:18px">
+        <div style="font-family:var(--font-heading);font-size:16.5px">Kontak langsung</div>
+        <div style="font-size:13.5px;color:#3d5470;margin-top:6px;line-height:1.65">Unit Sarpras &middot; ext. 214<br>Senin–Jumat, 07.00–15.00<br>{{ tujuanEmail }}</div>
+      </div>
+    </aside>
+  </sc-if>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:900,&quot;height&quot;:840},&quot;emailTujuan&quot;:{&quot;editor&quot;:&quot;text&quot;,&quot;default&quot;:&quot;sarpras@sman4bandung.sch.id&quot;,&quot;tsType&quot;:&quot;string&quot;},&quot;kategoriAwal&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;Kelas&quot;,&quot;Lab&quot;,&quot;Lapangan&quot;,&quot;Toilet&quot;],&quot;default&quot;:&quot;Kelas&quot;,&quot;tsType&quot;:&quot;string&quot;},&quot;tampilkanPratinjau&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:true,&quot;tsType&quot;:&quot;boolean&quot;}}">
+const KAT = [
+  { label: 'Kelas', icon: 'M3 5h18v11H3zM8 20h8M12 16v4' },
+  { label: 'Lab', icon: 'M9 3h6M10 3v6l-5 9a2 2 0 002 3h10a2 2 0 002-3l-5-9V3' },
+  { label: 'Lapangan', icon: 'M3 5h18v14H3zM12 5v14M3 10h3M18 10h3' },
+  { label: 'Toilet', icon: 'M7 3v8a5 5 0 0010 0V3M12 16v5M9 21h6' }
+];
+const URG = ['Rendah', 'Sedang', 'Tinggi'];
+const KEY = 'sipras-draft-v1';
+const EMPTY = { judul: '', kategori: 'Kelas', lokasi: '', deskripsi: '', nama: '', kelas: '', urgensi: 'Sedang' };
+
+class Component extends DCLogic {
+  state = { f: { ...EMPTY }, files: [], sent: false, touched: {} };
+
+  componentDidMount() {
+    const awal = this.props.kategoriAwal;
+    try {
+      const raw = localStorage.getItem(KEY);
+      const draft = raw ? JSON.parse(raw) : {};
+      this.setState({ f: { ...EMPTY, ...draft, ...(awal ? { kategori: awal } : {}) } });
+    } catch (e) {
+      if (awal) this.set('kategori', awal);
+    }
+  }
+
+  componentDidUpdate(prev) {
+    const awal = this.props.kategoriAwal;
+    if (awal && awal !== prev.kategoriAwal) this.set('kategori', awal);
+  }
+
+  save(f) { try { localStorage.setItem(KEY, JSON.stringify(f)); } catch (e) {} }
+
+  set(key, v) {
+    this.setState(s => {
+      const f = { ...s.f, [key]: v };
+      this.save(f);
+      return { f, sent: false };
+    });
+  }
+
+  touch(key) { this.setState(s => ({ touched: { ...s.touched, [key]: true } })); }
+
+  body() {
+    const f = this.state.f;
+    const foto = this.state.files.length ? this.state.files.join(', ') : '(dilampirkan pada email ini)';
+    return [
+      'Judul        : ' + (f.judul || '-'),
+      'Kategori     : ' + f.kategori,
+      'Lokasi       : ' + (f.lokasi || '-'),
+      'Urgensi      : ' + f.urgensi,
+      'Nama pelapor : ' + (f.nama || '-'),
+      'Kelas/unit   : ' + (f.kelas || '-'),
+      '',
+      'Deskripsi kendala:',
+      f.deskripsi || '-',
+      '',
+      'Foto bukti: ' + foto
+    ].join('\n');
+  }
+
+  renderVals() {
+    const s = this.state, f = s.f;
+    const email = this.props.emailTujuan || 'sarpras@sman4bandung.sch.id';
+    const err = k => {
+      if (!s.touched[k] || (f[k] || '').trim()) return '';
+      return k === 'judul' ? 'Judul kerusakan wajib diisi.'
+        : k === 'lokasi' ? 'Sebutkan gedung, lantai, dan ruangannya.'
+        : 'Ceritakan singkat kendalanya agar petugas paham.';
+    };
+    const done = ['judul', 'lokasi', 'deskripsi'].filter(k => (f[k] || '').trim().length > 2).length;
+    const extra = (f.nama || '').trim() ? 1 : 0;
+    const pct = Math.round(((done + extra) / 4) * 100);
+    const valid = done === 3;
+
+    return {
+      f,
+      tujuanEmail: email,
+      sent: s.sent,
+      pct,
+      barStyle: { height: '100%', width: pct + '%', background: valid ? '#22c55e' : '#2f6bb3', transition: 'width .25s ease' },
+      showPreview: this.props.tampilkanPratinjau !== false,
+      descLen: (f.deskripsi || '').length,
+      errJudul: err('judul'),
+      errLokasi: err('lokasi'),
+      errDeskripsi: err('deskripsi'),
+      hint: valid ? 'Siap dikirim — draf tersimpan otomatis di perangkat ini.' : 'Judul, lokasi, dan deskripsi wajib diisi.',
+      fotoLabel: s.files.length ? s.files.length + ' foto dipilih' : 'Tambahkan foto bukti',
+      fotoList: s.files.map((nama, i) => ({ nama, remove: () => this.setState(st => ({ files: st.files.filter((_, j) => j !== i) })) })),
+      preview: 'Kepada: ' + email + '\nSubjek: [Pengaduan Sarpras] ' + (f.judul || 'Judul kerusakan') + '\n\n' + this.body(),
+      kategoriOpts: KAT.map(k => ({ label: k.label, icon: k.icon, on: f.kategori === k.label, pick: () => this.set('kategori', k.label) })),
+      urgensiOpts: URG.map(label => ({ label, on: f.urgensi === label, pick: () => this.set('urgensi', label) })),
+      setJudul: e => this.set('judul', e.target.value),
+      setLokasi: e => this.set('lokasi', e.target.value),
+      setDeskripsi: e => this.set('deskripsi', e.target.value.slice(0, 400)),
+      setNama: e => this.set('nama', e.target.value),
+      setKelas: e => this.set('kelas', e.target.value),
+      touchJudul: () => this.touch('judul'),
+      touchLokasi: () => this.touch('lokasi'),
+      touchDeskripsi: () => this.touch('deskripsi'),
+      onFiles: e => this.setState({ files: Array.from(e.target.files || []).map(x => x.name).slice(0, 4), sent: false }),
+      reset: () => { this.save(EMPTY); this.setState({ f: { ...EMPTY }, files: [], sent: false, touched: {} }); },
+      onSubmit: e => {
+        e.preventDefault();
+        if (!valid) { this.setState({ touched: { judul: true, lokasi: true, deskripsi: true } }); return; }
+        const url = 'mailto:' + email +
+          '?subject=' + encodeURIComponent('[Pengaduan Sarpras] ' + f.judul) +
+          '&body=' + encodeURIComponent(this.body());
+        window.open(url, '_blank');
+        this.setState({ sent: true });
+      }
+    };
+  }
+}
+</script>
+</body>
+</html>
